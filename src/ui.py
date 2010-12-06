@@ -2,8 +2,16 @@
 
 '''
 
-from javax.swing import JFrame, JPanel, JLabel, BoxLayout, ImageIcon
+from javax.swing import JFrame, JPanel, JLabel, BoxLayout, ImageIcon, BorderFactory
 from java.awt import BorderLayout, Dimension
+
+class BorderPanel(JPanel):
+    def __init__(self, name):
+        super(BorderPanel, self).__init__()
+        self.border = BorderFactory.createTitledBorder(name)
+        
+
+# --- Program Frames ----
 
 class MainFrame(JFrame):
     def __init__(self):
@@ -15,7 +23,7 @@ class MainFrame(JFrame):
     
     def _createPanes(self):
         self.mainpanel = panel = JPanel()
-        panel.layout = BoxLayout(panel, BoxLayout.X_AXIS)
+        panel.layout = BoxLayout(panel, BoxLayout.X_AXIS) 
         self.add(panel)
         
         self.left_panel = left_panel = LeftPanel()
@@ -24,9 +32,9 @@ class MainFrame(JFrame):
         self.right_panel = right_panel = RightPanel()
         panel.add(right_panel)
         
-class LeftPanel(JPanel):
+class LeftPanel(BorderPanel):
     def __init__(self):
-        super(LeftPanel, self).__init__()
+        super(LeftPanel, self).__init__("Stages")
         
         self.layout = BoxLayout(self, BoxLayout.Y_AXIS)
         
@@ -42,29 +50,29 @@ class StagesInfoPanel(JPanel):
         
         self.layout = BoxLayout(self, BoxLayout.X_AXIS)
         
-        self.if_panel = if_panel = StageInfoPanel()
+        self.if_panel = if_panel = StageInfoPanel("IF")
         self.add(if_panel)
         if_panel.text = "IF"
         
-        self.id_panel = id_panel = StageInfoPanel()
+        self.id_panel = id_panel = StageInfoPanel("ID")
         self.add(id_panel)
         id_panel.text = "ID"
         
-        self.ex_panel = ex_panel = StageInfoPanel()
+        self.ex_panel = ex_panel = StageInfoPanel("EX")
         self.add(ex_panel)
         ex_panel.text = "EX"
         
-        self.mem_panel = mem_panel = StageInfoPanel()
+        self.mem_panel = mem_panel = StageInfoPanel("MEM")
         self.add(mem_panel)
         mem_panel.text = "MEM"
         
-        self.wb_panel = wb_panel = StageInfoPanel()
+        self.wb_panel = wb_panel = StageInfoPanel("WB")
         self.add(wb_panel)
         wb_panel.text = "WB"
 
-class StageInfoPanel(JPanel):
-    def __init__(self):
-        super(StageInfoPanel, self).__init__()
+class StageInfoPanel(BorderPanel):
+    def __init__(self, name):
+        super(StageInfoPanel, self).__init__(name)
         
         self.layout = BoxLayout(self, BoxLayout.Y_AXIS)
         
@@ -107,9 +115,9 @@ class RightPanel(JPanel):
         self.registers_info_panel = registers_info_panel = RegistersInfoPanel()
         self.add(registers_info_panel)
 
-class ControlPanel(JPanel):
+class ControlPanel(BorderPanel):
     def __init__(self):
-        super(ControlPanel, self).__init__()
+        super(ControlPanel, self).__init__("Control")
         
         self.layout = BoxLayout(self, BoxLayout.X_AXIS)
         
@@ -125,17 +133,17 @@ class ControlPanel(JPanel):
         self.button_load = button_load = JLabel("L")
         self.add(button_load)
 
-class MemInfoPanel(JPanel):
+class MemInfoPanel(BorderPanel):
     def __init__(self):
-        super(MemInfoPanel, self).__init__()
+        super(MemInfoPanel, self).__init__("Memory")
 
-class ClockInfoPanel(JPanel):
+class ClockInfoPanel(BorderPanel):
     def __init__(self):
-        super(ClockInfoPanel, self).__init__()
+        super(ClockInfoPanel, self).__init__("Clock")
         
-class RegistersInfoPanel(JPanel):
+class RegistersInfoPanel(BorderPanel):
     def __init__(self):
-        super(RegistersInfoPanel, self).__init__()
+        super(RegistersInfoPanel, self).__init__("Registers")
 
 if __name__ == "__main__":
     frame = MainFrame()
