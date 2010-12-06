@@ -56,11 +56,12 @@ class TypeRInstruction(Instruction):
         pass
        
     def memory_access(self, memory):
-        pass
+        if registers.set_in_use(self.rd)
+        		registers[self.rd] = self.vd
     
     def write_back(self, registers):
-        registers[self.rd] = self.vd
-        registers.setFree(self.rd)
+				if registers.set_in_use(self.rd)
+        		registers.setFree(self.rd)
 
 class TypeIInstruction(Instruction):
     def __init__(self, rs, rt, imm):
@@ -77,16 +78,30 @@ class TypeIInstruction(Instruction):
         pass
        
     def memory_access(self, memory):
-        pass
+				if registers.set_in_use(self.rt)
+        		registers[self.rt] = self.vt
     
     def write_back(self, registers):
-        registers[self.rt] = self.vt
-        registers.setFree(self.rt)
+				if registers.set_in_use(self.rt)
+        		registers.setFree(self.rt)
 
 class TypeJInstruction(Instruction):
-    def __init__(self):
-        pass
-    
+    def __init__(self, tarAdd):
+				self.tarAdd = tarAdd
+
+		def register_fetch(self): 
+				pass
+
+		def execute(self)
+				pass
+
+		def memory_access(self, memory)
+				pass
+
+		def write_back(self, registers)
+				pass
+						 
+   
 class Add(TypeRInstruction):
     def execute(self):
         self.vd = self.vs + self.vt
@@ -129,7 +144,12 @@ class Sw(TypeIInstruction):
 
 class Jmp(TypeJInstruction):
     def execute(self):
-        pass 
+				if registers.set_in_use(self.rd):
+						registers.setFree(self.rd)
+				if registers.set_in_use(self.rt):
+						registers.setFree(self.rt)
+		self.PC = self.tarAdd
+	
        
 class Stage(object):
     def __init__(self, prev_stage):
