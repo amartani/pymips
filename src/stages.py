@@ -40,13 +40,13 @@ class Stage(object):
         print self.to_s() + " clock count:" + str(self.clock_count)
 
     def instruction_available(self):
-        if self.clock == 0:
+        if self.clock_count == 0:
             return True
         return False
 
     def foward(self):
         if self.prev_stage.instruction_available():
-            get_instruction()
+            self.get_instruction()
         print self.to_s() + " foward:" + str(self.instruction)
 
 class IF(Stage):
