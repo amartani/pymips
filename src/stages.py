@@ -3,35 +3,35 @@ class IF:
         pass
 
     def clock(self):
-        pass
+        print "IF clock"
 
 class ID:
     def __init__(self, if_):
         self.if_ = if_
 
     def clock(self):
-        pass
+        print "ID clock"
 
 class EX:
     def __init__(self, id):
         self.id = id
 
     def clock(self):
-        pass
+        print "EX clock"
 
 class MEM:
     def __init__(self, ex):
         self.ex = ex
 
     def clock(self):
-        pass
+        print "MEM clock"
 
 class WB:
     def __init__(self, mem):
         self.mem = mem
 
     def clock(self):
-        pass
+        print "WB clock"
 
 
 class Pipeline:
