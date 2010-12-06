@@ -21,6 +21,10 @@ class Instruction(object):
             return 2
         return 1
 
+    # Must handle jumps and locks
+    def available(self):
+        return True
+
     def to_s(self):
         return self.bits
 
@@ -47,12 +51,12 @@ class Stage(object):
         print self.to_s() + " clock count:" + str(self.clock_count)
 
     def instruction_available(self):
-        if self.clock_count == 0:
+        if self.clock_count == 0 and self.instruction is not None and self.instruction.available():
             return True
         return False
 
     def foward(self):
-        if self.instruction_available():
+        if self.clock_count == 0:
             if self.prev_stage.instruction_available():
                 self.get_instruction()
                 if self.instruction is None:
@@ -122,9 +126,6 @@ mult_instruction = Instruction('00000000110001100011100000011000')
 instruction_deque = deque([mult_instruction])
 instruction_buffer = InstructionBuffer(instruction_deque)
 pipeline = Pipeline(instruction_buffer)
-
-print mult_instruction.clock_delay_for(pipeline.ex)
-
 pipeline.clock()
 pipeline.foward()
 pipeline.clock()
