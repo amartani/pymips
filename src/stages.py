@@ -24,23 +24,17 @@ class Instruction(object):
     def to_s(self):
         return self.bits
 
-class NullInstruction():
-    def clock_delay_for(self, stage):
-        return 0
-
-    def to_s(self):
-        return "Null"
-
 class Stage(object):
     def __init__(self, prev_stage):
         self.prev_stage = prev_stage
         self.clock_count = 0
-        self.instruction = NullInstruction()
+        self.instruction = None
 
     def get_instruction(self):
         if self.prev_stage.instruction_available():
             self.instruction = self.prev_stage.instruction
-            self.clock_count = self.instruction.clock_delay_for(self)
+            if self.instruction is not None:
+                self.clock_count = self.instruction.clock_delay_for(self)
 
     def clock(self):
         if self.clock_count > 0:
@@ -55,7 +49,10 @@ class Stage(object):
     def foward(self):
         if self.prev_stage.instruction_available():
             self.get_instruction()
-        print self.to_s() + " foward:" + self.instruction.to_s()
+            if self.instruction is not None:
+                print self.to_s() + " foward: " + self.instruction.to_s()
+        else:
+            print self.to_s() + " bubble!"
 
 class IF(Stage):
     def get_instruction(self):
