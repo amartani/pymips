@@ -32,7 +32,7 @@ class Stage(object):
     def get_instruction(self):
         if self.prev_stage.instruction_available():
             self.instruction = self.prev_stage.instruction()
-            self.clock = self.instruction.clock_delay_for(self)
+            self.clock_count = self.instruction.clock_delay_for(self)
 
     def clock(self):
         if self.clock_count > 0:
