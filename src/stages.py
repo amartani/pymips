@@ -87,11 +87,11 @@ class Pipeline:
         self.wb.clock()
 
     def foward(self):
-        self.wb.clock()
-        self.mem.clock()
-        self.ex.clock()
-        self.id.clock()
-        self.if_.clock()
+        self.wb.foward()
+        self.mem.foward()
+        self.ex.foward()
+        self.id.foward()
+        self.if_.foward()
 
 instruction_deque = deque([Instruction('00000000110001100011100000011000')])
 instruction_buffer = InstructionBuffer(instruction_deque)
