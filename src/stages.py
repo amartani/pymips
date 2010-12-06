@@ -105,11 +105,11 @@ class Pipeline:
         self.wb  = wb  = WB(mem)
 
     def clock(self):
-        self.if_.clock()
-        self.id.clock()
-        self.ex.clock()
-        self.mem.clock()
         self.wb.clock()
+        self.mem.clock()
+        self.ex.clock()
+        self.id.clock()
+        self.if_.clock()
 
     def foward(self):
         self.wb.foward()
