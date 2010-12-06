@@ -53,7 +53,7 @@ class Stage(object):
                 print self.to_s() + " foward: " + self.instruction.to_s()
         else:
             print self.to_s() + " bubble!"
-
+ 
 class IF(Stage):
     def get_instruction(self):
         if self.prev_stage.instruction_available():
