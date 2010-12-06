@@ -17,7 +17,7 @@ class Instruction(object):
         self.bits = bits
 
     def clock_delay_for(self, stage):
-        if self.bits[0:12] == "000000" and self.bits[-6:] == "011000" and isinstance( stage, EX ):
+        if self.bits[0:6] == "000000" and self.bits[-6:] == "011000" and isinstance( stage, EX ):
             return 2
         return 1
 
@@ -33,8 +33,13 @@ class Stage(object):
     def get_instruction(self):
         if self.prev_stage.instruction_available():
             self.instruction = self.prev_stage.instruction
-            if self.instruction is not None:
+            if self.instruction is None:
+                self.clock_count = 0
+            else:
                 self.clock_count = self.instruction.clock_delay_for(self)
+        else:
+            self.instruction = None
+            self.clock_count = 0
 
     def clock(self):
         if self.clock_count > 0:
@@ -47,18 +52,28 @@ class Stage(object):
         return False
 
     def foward(self):
-        if self.prev_stage.instruction_available():
-            self.get_instruction()
-            if self.instruction is not None:
-                print self.to_s() + " foward: " + self.instruction.to_s()
+        if self.instruction_available():
+            if self.prev_stage.instruction_available():
+                self.get_instruction()
+                if self.instruction is None:
+                    print self.to_s() + " bubble!"
+                else:
+                    print self.to_s() + " foward: " + self.instruction.to_s()
+            else:
+                self.instruction = None
+                self.clock_count = 0
+                print self.to_s() + " bubble!"
         else:
-            print self.to_s() + " bubble!"
+            print self.to_s() + " processing: " + self.instruction.to_s()
 
 class IF(Stage):
     def get_instruction(self):
         if self.prev_stage.instruction_available():
             self.instruction = self.prev_stage.instruction()
             self.clock_count = self.instruction.clock_delay_for(self)
+        else:
+            self.instruction = None
+            self.clock_count = 0
 
     def to_s(self):
         return "IF"
@@ -103,9 +118,23 @@ class Pipeline:
         self.id.foward()
         self.if_.foward()
 
-instruction_deque = deque([Instruction('00000000110001100011100000011000')])
+mult_instruction = Instruction('00000000110001100011100000011000')
+instruction_deque = deque([mult_instruction])
 instruction_buffer = InstructionBuffer(instruction_deque)
 pipeline = Pipeline(instruction_buffer)
+
+print mult_instruction.clock_delay_for(pipeline.ex)
+
+pipeline.clock()
+pipeline.foward()
+pipeline.clock()
+pipeline.foward()
+pipeline.clock()
+pipeline.foward()
+pipeline.clock()
+pipeline.foward()
+pipeline.clock()
+pipeline.foward()
 pipeline.clock()
 pipeline.foward()
 pipeline.clock()
