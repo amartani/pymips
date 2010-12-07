@@ -76,10 +76,14 @@ class StageInfoPanel(BorderPanel):
     def __init__(self, name):
         super(StageInfoPanel, self).__init__(name)
         
-        self.layout = BoxLayout(self, BoxLayout.Y_AXIS)
+        self.layout = BoxLayout(self, BoxLayout.X_AXIS)
+        
+        self.add(Box.createHorizontalGlue())
         
         self.label = label = JLabel()
         self.add(label)
+        
+        self.add(Box.createHorizontalGlue())
     
     def set_text(self, text):
         self.label.text = text
