@@ -2,7 +2,7 @@
 
 '''
 
-from javax.swing import JFrame, JPanel, JLabel, JButton, BoxLayout, ImageIcon, BorderFactory
+from javax.swing import JFrame, JPanel, JLabel, JButton, BoxLayout, Box, ImageIcon, BorderFactory
 from java.awt import BorderLayout, Dimension
 
 class BorderPanel(JPanel):
@@ -43,6 +43,8 @@ class LeftPanel(BorderPanel):
         
         self.stages_image_panel = stages_image_panel = StagesImagePanel()
         self.add(stages_image_panel)
+        
+        self.add(Box.createVerticalGlue())
 
 class StagesInfoPanel(JPanel):
     def __init__(self):
@@ -92,7 +94,7 @@ class StagesImagePanel(JPanel):
     def __init__(self):
         super(StagesImagePanel, self).__init__()
         
-        self.layout = BoxLayout(self, BoxLayout.Y_AXIS)
+        self.layout = BoxLayout(self, BoxLayout.X_AXIS)
         
         self.add(JLabel(ImageIcon("../static/mips.png")))
 
@@ -121,6 +123,8 @@ class ControlPanel(BorderPanel):
         
         self.layout = BoxLayout(self, BoxLayout.X_AXIS)
         
+        self.add(Box.createHorizontalGlue())
+        
         self.button_play = button_play = JButton(ImageIcon("../static/media-playback-start.png"))
         self.add(button_play)
         
@@ -132,6 +136,8 @@ class ControlPanel(BorderPanel):
         
         self.button_load = button_load = JButton(ImageIcon("../static/document-open.png"))
         self.add(button_load)
+        
+        self.add(Box.createHorizontalGlue())
 
 class MemInfoPanel(BorderPanel):
     def __init__(self):
