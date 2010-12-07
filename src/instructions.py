@@ -121,7 +121,7 @@ class Jmp(Instruction):
     def __init__(self, tarAdd):
         self.tarAdd = tarAdd
 
-    def decode_instruction(self):
+    def instruction_fetch(self):
         PC.set_in_use()
 
     def write_back(self):
