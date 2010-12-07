@@ -131,57 +131,6 @@ class Jmp(TypeJInstruction):
     def execute(self):
         pass 
        
-    '''
-    class Add(Instruction):
-        def __init__(self, a, b):
-            self.a = a
-            self.b = b 
-    
-        def add(self):
-            z = self.a + self.b
-            return z
-    
-    class Addi(Instruction):
-    def __init__(self):
-        self.teste
-        
-class Beq(Instruction):
-    def __init__(self):
-        self.teste
-        
-class Ble(Instruction):
-    def __init__(self):
-        self.teste
-        
-class Bne(Instruction):
-    def __init__(self):
-        self.teste
-         
-class Jmp(Instruction):
-    def __init__(self):
-        self.teste
-        
-class Lw(Instruction):
-    def __init__(self):
-        self.teste
-        
-class Mul(Instruction):
-    def __init__(self):
-        self.teste
-        
-class Nop(Instruction):
-    def __init__(self):
-        self.teste
-        
-class Sub(Instruction):
-    def __init__(self):
-        self.teste
-        
-class Sw(Instruction):
-    def __init__(self):
-        self.teste
-'''
-
 class Stage(object):
     def __init__(self, prev_stage):
         self.prev_stage = prev_stage
