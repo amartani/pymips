@@ -2,7 +2,7 @@
 
 '''
 
-from javax.swing import JFrame, JPanel, JLabel, BoxLayout, ImageIcon, BorderFactory
+from javax.swing import JFrame, JPanel, JLabel, JButton, BoxLayout, ImageIcon, BorderFactory
 from java.awt import BorderLayout, Dimension
 
 class BorderPanel(JPanel):
@@ -121,16 +121,16 @@ class ControlPanel(BorderPanel):
         
         self.layout = BoxLayout(self, BoxLayout.X_AXIS)
         
-        self.button_play = button_play = JLabel(">")
+        self.button_play = button_play = JButton(ImageIcon("../static/media-playback-start.png"))
         self.add(button_play)
         
-        self.button_ff = button_ff = JLabel(">>")
+        self.button_ff = button_ff = JButton(ImageIcon("../static/media-seek-forward.png"))
         self.add(button_ff)
         
-        self.button_pause = button_pause = JLabel("||")
+        self.button_pause = button_pause = JButton(ImageIcon("../static/media-playback-pause.png"))
         self.add(button_pause)
         
-        self.button_load = button_load = JLabel("L")
+        self.button_load = button_load = JButton(ImageIcon("../static/document-open.png"))
         self.add(button_load)
 
 class MemInfoPanel(BorderPanel):
