@@ -3,7 +3,7 @@ class InstructionBuffer(object):
         self.bits_buffer = bits_buffer
 
     def instruction_available(self):
-        if self.bits_buffer.__len__() > 0:
+        if len(self.bits_buffer) > 0:
             return True
         return False
 
