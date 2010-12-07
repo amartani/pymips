@@ -1,6 +1,6 @@
 from collections import deque
 from array import array
-from controller import * 
+from controller import *
 
 class InstructionBuffer(object):
     def __init__(self, bits_buffer):
@@ -13,7 +13,7 @@ class InstructionBuffer(object):
 
     def instruction(self):
         return self.bits_buffer.popleft()
-    
+
 class Instruction(object):
     def __init__(self, bits, pc):
         self.bits = bits
@@ -33,13 +33,13 @@ class Instruction(object):
 
     def register_fetch(self, registers):
         pass
-    
+
     def execute(self):
         pass
-    
+
     def memory_access(self, memory):
         pass
-    
+
     def write_back(self, registers):
         pass
 
@@ -48,15 +48,15 @@ class TypeRInstruction(Instruction):
         self.rs = rs
         self.rt = rt
         self.rd = rd
-    
+
     def register_fetch(self, registers):
         self.vs = registers[self.rs]
         self.vt = registers[self.rt]
         registers.set_in_use(self.rd)
-    
+
     def execute(self):
         pass
-       
+
     def memory_access(self, memory):
         if registers.set_in_use(self.rd):
             pass
@@ -71,12 +71,12 @@ class TypeIInstruction(Instruction):
         self.rs = rs
         self.rt = rt
         self.imm = imm
-        
+
     def register_fetch(self, registers):
         self.vs = registers[self.rs]
         self.vt = registers[self.rt]
         registers.set_in_use(self.rt)
-        
+
     def execute(self):
         pass
 
@@ -93,7 +93,7 @@ class TypeJInstruction(Instruction):
     def __init__(self, tarAdd):
         self.tarAdd = tarAdd
 
-    def register_fetch(self): 
+    def register_fetch(self):
         pass
 
     def execute(self):
@@ -134,32 +134,31 @@ class Beq(TypeIInstruction):
         if self.vs == self.vt
             PC += imm
         PC += 4
-    
+
 class Ble(TypeIInstruction):
     def execute(self):
         if self.vs <= self.vt
             PC = imm
         else
             PC += 4
-    
+
 class Bne(TypeIInstruction):
     def execute(self):
         if self.vs != self.vt
             PC += imm
         PC += 4
-    
+
 class Lw(TypeIInstruction):
     def execute(self):
-        pass 
-    
+        pass
+
 class Sw(TypeIInstruction):
     def execute(self):
-        pass 
-
+        pass
 
 class Jmp(TypeJInstruction):
     def __init__ (self, tarAdd):
-        self.tarAdd = 0             
+        self.tarAdd = 0
 
     def execute(self):
         if registers.set_in_use(self.rd):
@@ -167,7 +166,7 @@ class Jmp(TypeJInstruction):
         if registers.set_in_use(self.rt):
             registers.setFree(self.rt)
         PC = self.tarAdd
-           
+
 class Stage(object):
     def __init__(self, prev_stage):
         self.prev_stage = prev_stage
@@ -264,11 +263,11 @@ class Pipeline:
 class Register:
     def __init__(self, value):
         self.inUSe = False
-        self.value = value  
-        
+        self.value = value
+
     def set_in_use(self):
         self.inUse = True #Rever depois!
-    
+
 class Memory:
     def teste(self):
 
@@ -283,7 +282,6 @@ class PipelineControl:
         while PC != 4*qtde_instLength :
             instruction = instructions(PC)
 
-   
 registers = []
 
 
