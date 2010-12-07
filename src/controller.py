@@ -1,5 +1,6 @@
-from ui import MainFrame
-from mocks import PipelineControl
+from ui     import MainFrame
+from mocks  import *
+from stages import *
 import re
 import threading
 import time
