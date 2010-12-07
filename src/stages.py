@@ -41,22 +41,11 @@ class Stage(object):
             self.clock_count = self.instruction.clock_delay_for(self)
 
 class IF(Stage):
-    def get_instruction(self):
-        if self.prev_stage.instruction_available():
-            self.instruction = self.prev_stage.instruction()
-            self.clock_count = self.instruction.clock_delay_for(self)
-        else:
-            self.instruction = None
-            self.clock_count = 0
-
     def to_s(self):
         return "IF"
 
     def stage_step(self):
         return self.instruction.instruction_fetch
-
-    def decode_instruction(self):
-        pass
 
 class ID(Stage):
     def to_s(self):
