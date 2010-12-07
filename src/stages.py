@@ -110,20 +110,13 @@ class PipelineControl:
         while PC != 4*qtde_instLength :
             instruction = instructions(PC)
 
-registers = []
 
-
-for i in range(32):
-  
-    registers.append(Register(0)) #iniciar certo depois!
-
- 
 '''
 teste = Add(Rx, Ry)
 teste.add()
 '''
 
-mult_instruction = Instruction('00000000110001100011100000011000')
+mult_instruction = Instruction('00000000110001100000100000011000')
 instruction_deque = deque([mult_instruction])
 instruction_buffer = InstructionBuffer(instruction_deque)
 pipeline = Pipeline(instruction_buffer)
