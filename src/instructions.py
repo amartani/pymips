@@ -1,10 +1,27 @@
+from mocks import *
+from stages import *
+
+PC = 0
+
+class InstructionBuffer(object):
+    def __init__(self, bits_buffer):
+        self.bits_buffer = bits_buffer
+
+    def instruction_available(self):
+        if self.bits_buffer.__len__() > 0:
+            return True
+        return False
+
+    def instruction(self):
+        return self.bits_buffer.popleft()
+
 class Instruction(object):
     def __init__(self, bits, pc):
         self.bits = bits
         self.pc = pc
 
     def clock_delay_for(self, stage):
-        if self.bits[0:5] == "000000" and self.bits[-6] == "011000" and isinstance( stage, EX ):
+        if self.bits[0:6] == "000000" and self.bits[-6:] == "011000" and isinstance( stage, EX ):
             return 2
         return 1
 
@@ -16,9 +33,6 @@ class Instruction(object):
         return self.bits
 
     def register_fetch(self, registers):
-        pass
-
-    def decode_instruction(self):
         pass
 
     def execute(self):
@@ -49,7 +63,7 @@ class TypeRInstruction(Instruction):
 
     def memory_access(self, memory):
         # if registers.set_in_use(self.rd):
-        if registers.set_in_use(self.pc):
+        if REGISTERS.set_in_use(self.pc):
             pass
 
     def write_back(self, registers):
@@ -78,7 +92,7 @@ class TypeIInstruction(Instruction):
 
     def memory_access(self, memory):
         # if registers.set_in_use(self.rt):
-        if registers.set_in_use(self.pc):
+        if REGISTERS.set_in_use(self.pc):
             pass
 
     def write_back(self, registers):
@@ -128,25 +142,25 @@ class Addi(TypeIInstruction):
 class Beq(TypeIInstruction):
     def execute(self):
         if self.vs == self.vt:
-            PC += imm
+            PC += self.imm
 
 class Ble(TypeIInstruction):
     def execute(self):
         if self.vs <= self.vt:
-            PC = imm
+            PC = self.imm
 
 class Bne(TypeIInstruction):
     def execute(self):
         if self.vs != self.vt:
-            PC += imm
+            PC += self.imm
 
 class Lw(TypeIInstruction):
-    def memory_access(self, memory):
-        registers[self.rt] = memory[imm + self.registers[self.rs]] 
+    def execute(self):
+        pass
 
 class Sw(TypeIInstruction):
-    def memory_access(self, memory):
-        memory[registers[self.rs] + imm] = registers[self.rt] 
+    def execute(self):
+        pass
 
 class Jmp(TypeJInstruction):
     def __init__ (self, tarAdd):
@@ -158,7 +172,7 @@ class Jmp(TypeJInstruction):
         #if registers.set_in_use(self.rt):
          #   registers.setFree(self.rt)       
         PC = self.tarAdd
-        registers.setFree(self.pc) 
+        REGISTERS.setFree(self.pc) 
 
 # class Instruction(object):
 #     def register_fetch(self, registers):
