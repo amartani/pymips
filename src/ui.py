@@ -2,7 +2,8 @@
 
 '''
 
-from javax.swing import JFrame, JPanel, JLabel, JButton, BoxLayout, Box, ImageIcon, BorderFactory
+from javax.swing import JFrame, JPanel, JLabel, JButton, JTable, JScrollPane, BoxLayout, Box, ImageIcon, BorderFactory
+from javax.swing.table import DefaultTableModel
 from java.awt import BorderLayout, Dimension
 
 class BorderPanel(JPanel):
@@ -145,7 +146,19 @@ class ControlPanel(BorderPanel):
 
 class MemInfoPanel(BorderPanel):
     def __init__(self):
-        super(MemInfoPanel, self).__init__("Memory")
+        super(MemInfoPanel, self).__init__("Recently Used Memory")
+        
+        headers = ["Address", "Value"]
+        self.table_model    = table_model   = DefaultTableModel(headers, 0)
+        self.table          = table         = JTable(table_model)
+        table.fillsViewportHeight = True
+        
+        scrollpane = JScrollPane(table)
+        
+        self.add(scrollpane)
+        
+    def add_memory_info(self, address, value):
+        self.table_model.insertRow(0, [address, value])
 
 class ClockInfoPanel(BorderPanel):
     def __init__(self):
