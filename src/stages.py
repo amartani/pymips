@@ -19,7 +19,7 @@ class Instruction(object):
         self.bits = bits
 
     def clock_delay_for(self, stage):
-        if self.bits[-6] == "000000" and self.bits[0:5] == "011000" and isinstance( stage, EX ):
+        if self.bits[0:5] == "000000" and self.bits[-6] == "011000" and isinstance( stage, EX ):
             return 2
         return 1
 
