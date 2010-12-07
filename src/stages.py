@@ -1,13 +1,13 @@
-from collections  import deque
-from array        import array
 from controller   import *
 from instructions import *
 
 class Stage(object):
     def __init__(self, prev_stage):
         self.prev_stage = prev_stage
-        self.clock_count = 0
-        self.instruction = None
+        self.busy = False
+        self.instruction_available = False
+        self.instruction = Nop(REGISTERS[0], REGISTERS[0], REGISTERS[0])
+        self.clock_count = self.instruction.clock_delay_for(self)
 
     def get_instruction(self):
         if self.prev_stage.instruction_available():
@@ -73,7 +73,6 @@ class WB(Stage):
     def to_s(self):
         return "WB"
 
-
 class Pipeline:
     def __init__(self, instruction_buffer):
         self.ib  = ib  = instruction_buffer
@@ -96,30 +95,3 @@ class Pipeline:
         self.ex.foward()
         self.id.foward()
         self.if_.foward()
-
-class Memory:
-    def teste(self):
-
-
-'''
-teste = Add(Rx, Ry)
-teste.add()
-'''
-
-mult_instruction = Instruction('00000000110001100000100000011000')
-instruction_deque = deque([mult_instruction])
-instruction_buffer = InstructionBuffer(instruction_deque)
-pipeline = Pipeline(instruction_buffer)
-pipeline.clock()
-pipeline.foward()
-pipeline.clock()
-pipeline.foward()
-pipeline.clock()
-pipeline.foward()
-pipeline.clock()
-pipeline.foward()
-pipeline.clock()
-pipeline.foward()
-pipeline.clock()
-pipeline.foward()
-pipeline.clock()
