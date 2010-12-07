@@ -1,4 +1,3 @@
-
 from ui import MainFrame
 from mocks import PipelineControl
 import re
@@ -20,7 +19,6 @@ class PipelineThread(threading.Thread):
             if not self.paused:
                 pipeline_end = not self.pipeline.clock()
             time.sleep(2.0)
-        
 
 class Controller(object):
     def __init__(self, main_frame):
@@ -31,7 +29,7 @@ class Controller(object):
     def run(self):
         self.main_frame.show()
         #self.pipeline.clock()
-    
+
     def play(self):
         print "Button play pressed"
         if self.thread is None:
@@ -57,7 +55,7 @@ class Controller(object):
         pipeline = self._create_pipeline(instructions)
         self.thread = PipelineThread(pipeline)
         print "File loaded"
-        
+
     @staticmethod
     def _get_lines_from_file(f):
         def line_filter(line):
@@ -72,14 +70,13 @@ class Controller(object):
         pipeline = PipelineControl(instructions, self.main_frame)
         pipeline.set_observer(self)
         return pipeline
-    
+
     def _kill_current_thread(self):
         if self.thread is not None:
             self.thread.stopped = True
             self.thread = None
 
 if __name__ == "__main__":
-    
     main_frame = MainFrame()
     controller = Controller(main_frame)
     controller.run()
