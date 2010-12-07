@@ -113,7 +113,7 @@ class PipelineControl:
         self.main_frame = main_frame
 
     def execute(self):
-        instLength = instructions.len()
+        instLength = len(instructions)
         PC = 0
         while PC != 4*qtde_instLength :
             instruction = instructions(PC)
