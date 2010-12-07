@@ -19,7 +19,7 @@ class PipelineControl:
     
     def set_observer(self, observer):
         self.observer = observer
-    
+
     def clock(self):
         if not self.instructions:
             return False
@@ -27,6 +27,12 @@ class PipelineControl:
         print instruction
         self.main_frame.add_memory_info(3, 5)
         return True
+
+    def execute(self):
+        instLength = len(instructions)
+        PC = 0
+        while PC != 4*qtde_instLength :
+            instruction = instructions(PC)
 
     def parse_instructions(self):
         self.parsed_instructions = []
