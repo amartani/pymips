@@ -1,10 +1,11 @@
+# -*- coding: utf-8 -*-
 '''
 
 '''
 
-from javax.swing import JFrame, JPanel, JLabel, JButton, JTable, JScrollPane, BoxLayout, Box, ImageIcon, BorderFactory
+from javax.swing import JFrame, JPanel, JLabel, JButton, JTable, JScrollPane, JTextField, BoxLayout, Box, ImageIcon, BorderFactory
 from javax.swing.table import DefaultTableModel
-from java.awt import BorderLayout, Dimension
+from java.awt import BorderLayout, GridLayout, Dimension
 
 class BorderPanel(JPanel):
     def __init__(self, name):
@@ -36,6 +37,14 @@ class MainFrame(JFrame):
     @property
     def add_memory_info(self):
         return self.right_panel.add_memory_info
+    
+    @property
+    def update_statistics(self):
+        return self.right_panel.update_statistics
+    
+    @property
+    def set_registers(self):
+        return self.right_panel.set_registers
         
 class LeftPanel(BorderPanel):
     def __init__(self):
@@ -120,8 +129,8 @@ class RightPanel(JPanel):
         self.mem_info_panel = mem_info_panel = MemInfoPanel()
         self.add(mem_info_panel)
         
-        self.clock_info_panel = clock_info_panel = ClockInfoPanel()
-        self.add(clock_info_panel)
+        self.statistics_panel = statistics_panel = StatisticsPanel()
+        self.add(statistics_panel)
 
         self.registers_info_panel = registers_info_panel = RegistersInfoPanel()
         self.add(registers_info_panel)
@@ -129,6 +138,14 @@ class RightPanel(JPanel):
     @property
     def add_memory_info(self):
         return self.mem_info_panel.add_memory_info
+    
+    @property
+    def update_statistics(self):
+        return self.statistics_panel.update_statistics
+    
+    @property
+    def set_registers(self):
+        return self.registers_info_panel.set_registers
 
 class ControlPanel(BorderPanel):
     def __init__(self):
@@ -168,15 +185,71 @@ class MemInfoPanel(BorderPanel):
     def add_memory_info(self, address, value):
         self.table_model.insertRow(0, [address, value])
 
-class ClockInfoPanel(BorderPanel):
+class StatisticsPanel(BorderPanel):
     def __init__(self):
-        super(ClockInfoPanel, self).__init__("Clock")
+        
+        super(StatisticsPanel, self).__init__("Statistics")
+        
+        self.layout = GridLayout(4, 2)
+        
+        self.add(JLabel("Clock corrente"))
+        
+        self.current_clock_txtfield = textfield = JTextField()
+        textfield.editable = False
+        self.add(textfield)
+        
+        self.add(JLabel("PC"))
+        
+        self.pc_txtfield = textfield = JTextField()
+        textfield.editable = False
+        self.add(textfield)
+        
+        self.add(JLabel("Numero de instrucoes concluidas"))
+        
+        self.no_instructions_txtfield = textfield = JTextField()
+        textfield.editable = False
+        self.add(textfield)
+        
+        self.add(JLabel("Produtividade"))
+        
+        self.productivity_txtfield = textfield = JTextField()
+        textfield.editable = False
+        self.add(textfield)
+        
+    def update_statistics(self, current_clock, pc, no_instructions, productivity):
+        self.current_clock_txtfield.text    = str(current_clock)
+        self.pc_txtfield.text               = str(pc)
+        self.no_instructions_txtfield.text  = str(no_instructions)
+        self.productivity_txtfield.text     = str(productivity)
         
 class RegistersInfoPanel(BorderPanel):
     def __init__(self):
         super(RegistersInfoPanel, self).__init__("Registers")
+        
+        self.layout = GridLayout(8, 8)
+        self.txtfields = txtfields = []
+        
+        for i in range(32):
+            self.add(JLabel("R%d" % i))
+            txtfield = JTextField()
+            txtfield.editable = False
+            txtfields.append(txtfield)
+            self.add(txtfield)
+
+    def set_registers(self, registers):
+        for i, value in enumerate(registers):
+            self.txtfields[i].text = str(value)
+
 
 if __name__ == "__main__":
     frame = MainFrame()
-    frame.add_memory_info(50, 10)
+    
+    frame.add_memory_info(1, 10)
+    frame.add_memory_info(2, 50)
+    frame.add_memory_info(3, 60)
+    
+    frame.update_statistics(60, 21, 41, 0.21)
+    
+    frame.set_registers([1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2])
+    
     frame.show()
