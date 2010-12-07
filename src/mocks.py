@@ -8,6 +8,9 @@ class Register:
     def set_in_use(self):
         self.inUse = True #Rever depois!
 
+    def set_free(self):
+        self.inUse = False
+
 REGISTERS = []
 for i in range(32):
     REGISTERS.append(Register(0))
@@ -16,23 +19,21 @@ class PipelineControl:
     def __init__(self, instructions, main_frame):
         self.instructions = instructions
         self.main_frame = main_frame
+        self.parse_instructions()
 
     def set_observer(self, observer):
         self.observer = observer
 
     def clock(self):
-        if not self.instructions:
-            return False
-        instruction = self.instructions.pop()
-        print instruction
-        self.main_frame.add_memory_info(3, 5)
-        return True
+        self.pipeline.clock()
+        self.pipeline.foward()
 
     def parse_instructions(self):
         self.parsed_instructions = []
         for line in self.instructions:
             parsed_instruction = self.parse_line(line)
             self.parsed_instructions.append(parsed_instruction)
+        self.pipeline = Pipeline(InstructionProxy(self.parsed_instructions))
 
     def parse_line(self, line):
         if line[0:6] == "000010":
