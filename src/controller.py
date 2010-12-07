@@ -1,6 +1,6 @@
 
 from ui import MainFrame
-from mocks import Pipeline
+from mocks import PipelineControl
 import re
 import threading
 import time
@@ -69,7 +69,7 @@ class Controller(object):
     LINE_RE = re.compile(r"([01]{32})")
 
     def _create_pipeline(self, instructions):
-        pipeline = Pipeline(instructions)
+        pipeline = PipelineControl(instructions, self.main_frame)
         pipeline.set_observer(self)
         return pipeline
     
