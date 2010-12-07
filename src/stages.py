@@ -15,8 +15,14 @@ class InstructionBuffer(object):
         return self.bits_buffer.popleft()
     
 class Instruction(object):
+<<<<<<< local
+    def __init__(self, bits, pc):
+        self.bits = bits
+		self.pc = pc
+=======
     def __init__(self, bits):
         self.bits = bits
+>>>>>>> other
 
     def clock_delay_for(self, stage):
         if self.bits[0:5] == "000000" and self.bits[-6] == "011000" and isinstance( stage, EX ):
@@ -59,9 +65,16 @@ class TypeRInstruction(Instruction):
     def memory_access(self, memory):
         pass
     
+<<<<<<< local
+    def write_back(self, registers):
+		if registers.set_in_use(self.rd)
+			registers[self.rd] = self.vd
+        	registers.setFree(self.rd)
+=======
     def write_back(self, registers):
         registers[self.rd] = self.vd
         registers.setFree(self.rd)
+>>>>>>> other
 
 class TypeIInstruction(Instruction):
     def __init__(self, rs, rt, imm):
@@ -77,28 +90,75 @@ class TypeIInstruction(Instruction):
     def execute(self):
         pass
        
+<<<<<<< local
+    def memory_access(self, memory):
+		if registers.set_in_use(self.rt)
+        	pass
+=======
     def memory_access(self, memory):
         pass
+>>>>>>> other
     
+<<<<<<< local
+    def write_back(self, registers):
+		if registers.set_in_use(self.rt)
+			registers[self.rt] = self.vt
+        	registers.setFree(self.rt)
+=======
     def write_back(self, registers):
         registers[self.rt] = self.vt
         registers.setFree(self.rt)
+>>>>>>> other
 
 class TypeJInstruction(Instruction):
+<<<<<<< local
+    def __init__(self, tarAdd):
+		self.tarAdd = tarAdd
+
+	def register_fetch(self): 
+			pass
+
+	def execute(self)
+			pass
+
+	def memory_access(self, memory)
+			pass
+
+	def write_back(self, registers)
+			pass
+						 
+   
+=======
     def __init__(self):
         pass
     
+>>>>>>> other
 class Add(TypeRInstruction):
     def execute(self):
+<<<<<<< local
         self.vd = self.vs + self.vt
+		PC += 4
+=======
+        self.vd = self.vs + self.vt
+>>>>>>> other
 
 class Sub(TypeRInstruction):
     def execute(self):
+<<<<<<< local
         self.vd = self.vs - self.vt
+		PC += 4
+=======
+        self.vd = self.vs - self.vt
+>>>>>>> other
 
 class Mul(TypeRInstruction):
     def execute(self):
+<<<<<<< local
         self.vd = self.vs * self.vt
+		PC += 4
+=======
+        self.vd = self.vs * self.vt
+>>>>>>> other
 
 class Nop(TypeRInstruction):
     def execute(self):
@@ -106,19 +166,47 @@ class Nop(TypeRInstruction):
 
 class Addi(TypeIInstruction):
     def execute(self):
+<<<<<<< local
         self.vt = self.vs + self.imm
+		PC += 4
+=======
+        self.vt = self.vs + self.imm
+>>>>>>> other
 
 class Beq(TypeIInstruction):
+<<<<<<< local
+    def execute(self):
+		if self.vs == self.vt
+			PC += imm
+		PC += 4
+		
+=======
     def execute(self):
         pass 
     
+>>>>>>> other
 class Ble(TypeIInstruction):
+<<<<<<< local
+    def execute(self):
+		if self.vs <= self.vt
+       		PC = imm
+		else
+			PC += 4
+=======
     def execute(self):
         pass 
+>>>>>>> other
     
 class Bne(TypeIInstruction):
+<<<<<<< local
+    def execute(self):
+		if self.vs != self.vt
+			PC += imm
+        PC += 4
+=======
     def execute(self):
         pass 
+>>>>>>> other
     
 class Lw(TypeIInstruction):
     def execute(self):
@@ -128,10 +216,24 @@ class Sw(TypeIInstruction):
     def execute(self):
         pass 
 
+<<<<<<< local
+class Jmp(TypeJInstruction):
+	def __init__ (self, tarAdd):
+		self.tarAdd = 0				
+
+    def execute(self):
+		if registers.set_in_use(self.rd):
+			registers.setFree(self.rd)
+		if registers.set_in_use(self.rt):
+			registers.setFree(self.rt)
+		PC = self.tarAdd
+	       
+=======
 class Jmp(TypeJInstruction):
     def execute(self):
         pass 
        
+>>>>>>> other
 class Stage(object):
     def __init__(self, prev_stage):
         self.prev_stage = prev_stage
@@ -236,39 +338,38 @@ class Register:
     
 class Memory:
     def teste(self):
+<<<<<<< local
+        return""
+
+class PipelineControl:
+		def __init__ (self, instructions, main_frame): 
+				self.instructions = instructions
+				self.main_frame = main_frame
+
+		def execute:
+				instLength = instructions.len()
+				PC = 0
+				while PC != 4*qtde_instLength :
+						instruction = instructions(PC)
+
+   
+registers = []
+
+=======
         return""
     
 registers = []
+>>>>>>> other
 
 for i in range(32):
   
     registers.append(Register(0)) #iniciar certo depois!
 
  
-
- 
-
-
-
-
-
-
-
-
-
 '''
 teste = Add(Rx, Ry)
 teste.add()
 '''
-
-
-
-
-
-
-
-
-
 
 mult_instruction = Instruction('00000000110001100011100000011000')
 instruction_deque = deque([mult_instruction])
