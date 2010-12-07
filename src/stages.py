@@ -96,14 +96,6 @@ class Pipeline:
         self.id.foward()
         self.if_.foward()
 
-class Register:
-    def __init__(self, value):
-        self.inUSe = False
-        self.value = value
-
-    def set_in_use(self):
-        self.inUse = True #Rever depois!
-
 class Memory:
     def teste(self):
 

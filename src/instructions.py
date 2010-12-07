@@ -135,17 +135,17 @@ class Addi(TypeIInstruction):
 
 class Beq(TypeIInstruction):
     def execute(self):
-        if self.vs == self.vt
+        if self.vs == self.vt:
             PC += imm
 
 class Ble(TypeIInstruction):
     def execute(self):
-        if self.vs <= self.vt
+        if self.vs <= self.vt:
             PC = imm
 
 class Bne(TypeIInstruction):
     def execute(self):
-        if self.vs != self.vt
+        if self.vs != self.vt:
             PC += imm
 
 class Lw(TypeIInstruction):
