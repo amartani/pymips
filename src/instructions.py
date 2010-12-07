@@ -49,6 +49,7 @@ class TypeRInstruction(Instruction):
         self.vs = registers[self.rs]
         self.vt = registers[self.rt]
         registers.set_in_use(self.rd)
+        PC += 4
 
     def execute(self):
         pass
@@ -72,6 +73,7 @@ class TypeIInstruction(Instruction):
         self.vs = registers[self.rs]
         self.vt = registers[self.rt]
         registers.set_in_use(self.rt)
+        PC += 4
 
     def execute(self):
         pass
@@ -90,6 +92,7 @@ class TypeJInstruction(Instruction):
         self.tarAdd = tarAdd
 
     def register_fetch(self):
+        PC += 4
         pass
 
     def execute(self):
@@ -104,17 +107,14 @@ class TypeJInstruction(Instruction):
 class Add(TypeRInstruction):
     def execute(self):
         self.vd = self.vs + self.vt
-        PC += 4
 
 class Sub(TypeRInstruction):
     def execute(self):
         self.vd = self.vs - self.vt
-        PC += 4
 
 class Mul(TypeRInstruction):
     def execute(self):
         self.vd = self.vs * self.vt
-        PC += 4
 
 class Nop(TypeRInstruction):
     def execute(self):
@@ -123,26 +123,21 @@ class Nop(TypeRInstruction):
 class Addi(TypeIInstruction):
     def execute(self):
         self.vt = self.vs + self.imm
-        PC += 4
 
 class Beq(TypeIInstruction):
     def execute(self):
         if self.vs == self.vt
             PC += imm
-        PC += 4
 
 class Ble(TypeIInstruction):
     def execute(self):
         if self.vs <= self.vt
             PC = imm
-        else
-            PC += 4
 
 class Bne(TypeIInstruction):
     def execute(self):
         if self.vs != self.vt
             PC += imm
-        PC += 4
 
 class Lw(TypeIInstruction):
     def execute(self):
