@@ -3,18 +3,6 @@ from stages import *
 
 PC = 0
 
-# class InstructionBuffer(object):
-#     def __init__(self, bits_buffer):
-#         self.bits_buffer = bits_buffer
-# 
-#     def instruction_available(self):
-#         if len(self.bits_buffer) > 0:
-#             return True
-#         return False
-# 
-#     def instruction(self):
-#         return self.bits_buffer.popleft()
-
 class Instruction(object):
     def __init__(self, bits, pc):
         self.bits = bits
