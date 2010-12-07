@@ -86,7 +86,8 @@ class PipelineControl:
             #eh mul
             s_index = int(line[6:12], 2)
             t_index = int(line[12:18], 2)
-            d_index = int(line[18:32], 2)
+            d_index = int(line[18:24], 2)
+            print str(s_index) + " " + str(t_index) + " " + str(d_index)
             return Mul(REGISTERS[s_index], REGISTERS[t_index], REGISTERS[d_index])
 
         elif line[0:6] == "000000" and line[-6:] == "000000":
