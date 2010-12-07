@@ -1,16 +1,11 @@
 from mocks  import *
 from stages import *
 
-PC = 0
-
 class Instruction(object):
-    def __init__(self, bits, pc):
-        self.bits = bits
+    def __init__(self, pc):
         self.pc = pc
 
     def clock_delay_for(self, stage):
-        if self.bits[0:6] == "000000" and self.bits[-6:] == "011000" and isinstance( stage, EX ):
-            return 2
         return 1
 
     # Must handle jumps and locks
@@ -20,10 +15,10 @@ class Instruction(object):
     def to_s(self):
         return self.bits
 
-    def register_fetch(self):
+    def instruction_fetch(self):
         pass
 
-    def instruction_decode(self):
+    def register_fetch(self):
         pass
 
     def execute(self):
@@ -41,17 +36,13 @@ class TypeRInstruction(Instruction):
         self.rt = rt
         self.rd = rd
 
-    # CAGADO!
     def register_fetch(self):
         self.rd.set_in_use()
+        self.vt = self.rt.value
+        self.vd = self.rd.value
 
-    # PUTA QUE O PARIU TA MTO CAGADO!
-    def memory_access(self):
-        if REGISTERS.set_in_use(self.pc):
-            pass
-
-    # CAGADO!
     def write_back(self):
+        self.rd = self.vd
         self.rd.set_free()
 
 class TypeIInstruction(Instruction):
@@ -95,11 +86,16 @@ class Sub(TypeRInstruction):
         self.vd = self.vs - self.vt
 
 class Mul(TypeRInstruction):
+    def clock_delay_for(self, stage):
+        if isinstance( stage, EX ):
+            return 2
+        return 1
+
     def execute(self):
-        self.vd.value = self.vs.value * self.vt.value
+        self.vd = self.vs*self.vt
 
 class Nop(TypeRInstruction):
-    def execute(self):
+    def __init__(self):
         pass 
 
 class Addi(TypeIInstruction):
