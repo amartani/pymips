@@ -14,8 +14,8 @@ class Stage(object):
         self.prev_stage = prev_stage
         self.busy = False
         self.instruction_available = False
-        self.instruction = None
-        self.clock_count = None
+        self.instruction = Nop(REGISTERS[0], REGISTERS[0], REGISTERS[0])
+        self.clock_count = self.instruction.clock_delay_for(self)
 
     def get_instruction(self):
         self.instruction_available = False
