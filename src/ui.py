@@ -32,6 +32,10 @@ class MainFrame(JFrame):
         
         self.right_panel = right_panel = RightPanel()
         panel.add(right_panel)
+    
+    @property
+    def add_memory_info(self):
+        return self.right_panel.add_memory_info
         
 class LeftPanel(BorderPanel):
     def __init__(self):
@@ -122,6 +126,10 @@ class RightPanel(JPanel):
         self.registers_info_panel = registers_info_panel = RegistersInfoPanel()
         self.add(registers_info_panel)
 
+    @property
+    def add_memory_info(self):
+        return self.mem_info_panel.add_memory_info
+
 class ControlPanel(BorderPanel):
     def __init__(self):
         super(ControlPanel, self).__init__("Control")
@@ -170,4 +178,5 @@ class RegistersInfoPanel(BorderPanel):
 
 if __name__ == "__main__":
     frame = MainFrame()
+    frame.add_memory_info(50, 10)
     frame.show()
