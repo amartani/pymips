@@ -22,7 +22,7 @@ class Stage(object):
         return self.instruction
 
     def clock(self):
-        print self.to_s() + " clock count: " + str(self.clock_count)
+        # print self.to_s() + " clock count: " + str(self.clock_count)
         if self.clock_count > 0:
             self.clock_count -= 1
             if self.clock_count == 0:
@@ -59,6 +59,10 @@ class ID(Stage):
 
     def stage_step(self):
         return self.instruction.decode_instruction
+
+    def clock(self):
+        if self.instruction.available():
+            super( FileInfo, self ).clock()
 
 class EX(Stage):
     def to_s(self):
