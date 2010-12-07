@@ -35,6 +35,9 @@ class Instruction(object):
     def register_fetch(self, registers):
         pass
 
+    def instruction_decode():
+        pass
+
     def execute(self):
         pass
 
@@ -59,9 +62,6 @@ class TypeRInstruction(Instruction):
             registers.set_in_use(self.pc)
             PC += 4
 
-    def execute(self):
-        pass
-
     # PUTA QUE O PARIU TA MTO CAGADO!
     def memory_access(self):
         if REGISTERS.set_in_use(self.pc):
@@ -80,6 +80,7 @@ class TypeIInstruction(Instruction):
         self.rt = rt
         self.imm = imm
 
+    # CAGADO!
     def register_fetch(self):
         if registers.setFree (self.pc): 
             self.vs = registers[self.rs]
