@@ -3,7 +3,7 @@
 
 '''
 
-from javax.swing import JFrame, JPanel, JLabel, JButton, JTable, JScrollPane, JTextField, BoxLayout, Box, ImageIcon, BorderFactory
+from javax.swing import JFrame, JPanel, JLabel, JButton, JTable, JScrollPane, JTextField, JFileChooser, BoxLayout, Box, ImageIcon, BorderFactory
 from javax.swing.table import DefaultTableModel
 from java.awt import BorderLayout, GridLayout, Dimension
 
@@ -49,6 +49,10 @@ class MainFrame(JFrame):
     @property
     def update_stages(self):
         return self.left_panel.update_stages
+
+    @property
+    def set_controller_observer(self):
+        return self.right_panel.set_controller_observer
         
 class LeftPanel(BorderPanel):
     def __init__(self):
@@ -153,6 +157,10 @@ class RightPanel(JPanel):
     @property
     def set_registers(self):
         return self.registers_info_panel.set_registers
+    
+    @property
+    def set_controller_observer(self):
+        return self.control_panel.set_controller_observer
 
 class ControlPanel(BorderPanel):
     def __init__(self):
@@ -163,18 +171,52 @@ class ControlPanel(BorderPanel):
         self.add(Box.createHorizontalGlue())
         
         self.button_play = button_play = JButton(ImageIcon("../static/media-playback-start.png"))
+        button_play.actionPerformed = self.button_play_command
         self.add(button_play)
         
         self.button_ff = button_ff = JButton(ImageIcon("../static/media-seek-forward.png"))
+        button_ff.actionPerformed = self.button_forward_command
         self.add(button_ff)
         
         self.button_pause = button_pause = JButton(ImageIcon("../static/media-playback-pause.png"))
+        button_pause.actionPerformed = self.button_pause_command
         self.add(button_pause)
         
         self.button_load = button_load = JButton(ImageIcon("../static/document-open.png"))
+        button_load.actionPerformed = self.button_load_command
         self.add(button_load)
         
         self.add(Box.createHorizontalGlue())
+    
+    def set_controller_observer(self, observer):
+        self.observer = observer
+    
+    def button_play_command(self, action_event):
+        observer = self.observer
+        if observer:
+            observer.play()
+    
+    def button_pause_command(self, action_event):
+        observer = self.observer
+        if observer:
+            observer.pause()
+
+    def button_forward_command(self, action_event):
+        observer = self.observer
+        if observer:
+            observer.forward()
+
+    def button_load_command(self, action_event):
+        observer = self.observer
+        if observer is None:
+            return
+        chooser = JFileChooser()
+        val = chooser.showOpenDialog(None)
+        if val != chooser.APPROVE_OPTION:
+            return
+        filename = chooser.selectedFile.path
+        observer.file(open(filename))
+
 
 class MemInfoPanel(BorderPanel):
     def __init__(self):
@@ -279,5 +321,17 @@ if __name__ == "__main__":
     pipeline = PipelineMock()
     
     frame.update_stages(pipeline)
+    
+    class ControllerMock:
+        def play(self):
+            print "Button play pressed"
+        def pause(self):
+            print "Button pause pressed"
+        def forward(self):
+            print "Button forward pressed"
+        def file(self, f):
+            print f
+    controller = ControllerMock()
+    frame.set_controller_observer(controller)
     
     frame.show()
