@@ -53,7 +53,7 @@ class IF(Stage):
         return "IF"
 
     def stage_step(self):
-        return self.instruction.decode_instruction
+        return self.instruction.instruction_fetch
 
     def decode_instruction(self):
         pass
