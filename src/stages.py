@@ -1,4 +1,5 @@
 from collections import deque
+from array import array
 
 class InstructionBuffer(object):
     def __init__(self, bits_buffer):
@@ -11,7 +12,7 @@ class InstructionBuffer(object):
 
     def instruction(self):
         return self.bits_buffer.popleft()
-
+    
 class Instruction(object):
     def __init__(self, bits):
         self.bits = bits
@@ -27,6 +28,159 @@ class Instruction(object):
 
     def to_s(self):
         return self.bits
+
+    def register_fetch(self, registers):
+            pass
+    
+    def execute(self):
+            pass
+    
+    def memory_access(self, memory):
+        pass
+    
+    def write_back(self, registers):
+        pass
+
+class TypeRInstruction(Instruction):
+    def __init__(self, rs, rt, rd):
+        self.rs = rs
+        self.rt = rt
+        self.rd = rd
+    
+    def register_fetch(self, registers):
+        self.vs = registers[self.rs]
+        self.vt = registers[self.rt]
+        registers.set_in_use(self.rd)
+    
+    def execute(self):
+        pass
+       
+    def memory_access(self, memory):
+        pass
+    
+    def write_back(self, registers):
+        registers[self.rd] = self.vd
+        registers.setFree(self.rd)
+
+class TypeIInstruction(Instruction):
+    def __init__(self, rs, rt, imm):
+        self.rs = rs
+        self.rt = rt
+        self.imm = imm
+        
+    def register_fetch(self, registers):
+        self.vs = registers[self.rs]
+        self.vt = registers[self.rt]
+        registers.set_in_use(self.rt)
+        
+    def execute(self):
+        pass
+       
+    def memory_access(self, memory):
+        pass
+    
+    def write_back(self, registers):
+        registers[self.rt] = self.vt
+        registers.setFree(self.rt)
+
+class TypeJInstruction(Instruction):
+    def __init__(self):
+        pass
+    
+class Add(TypeRInstruction):
+    def execute(self):
+        self.vd = self.vs + self.vt
+
+class Sub(TypeRInstruction):
+    def execute(self):
+        self.vd = self.vs - self.vt
+
+class Mul(TypeRInstruction):
+    def execute(self):
+        self.vd = self.vs * self.vt
+
+class Nop(TypeRInstruction):
+    def execute(self):
+        pass 
+
+class Addi(TypeIInstruction):
+    def execute(self):
+        self.vt = self.vs + self.imm
+
+class Beq(TypeIInstruction):
+    def execute(self):
+        pass 
+    
+class Ble(TypeIInstruction):
+    def execute(self):
+        pass 
+    
+class Bne(TypeIInstruction):
+    def execute(self):
+        pass 
+    
+class Lw(TypeIInstruction):
+    def execute(self):
+        pass 
+    
+class Sw(TypeIInstruction):
+    def execute(self):
+        pass 
+
+class Jmp(TypeJInstruction):
+    def execute(self):
+        pass 
+       
+    '''
+    class Add(Instruction):
+        def __init__(self, a, b):
+            self.a = a
+            self.b = b 
+    
+        def add(self):
+            z = self.a + self.b
+            return z
+    
+    class Addi(Instruction):
+    def __init__(self):
+        self.teste
+        
+class Beq(Instruction):
+    def __init__(self):
+        self.teste
+        
+class Ble(Instruction):
+    def __init__(self):
+        self.teste
+        
+class Bne(Instruction):
+    def __init__(self):
+        self.teste
+         
+class Jmp(Instruction):
+    def __init__(self):
+        self.teste
+        
+class Lw(Instruction):
+    def __init__(self):
+        self.teste
+        
+class Mul(Instruction):
+    def __init__(self):
+        self.teste
+        
+class Nop(Instruction):
+    def __init__(self):
+        self.teste
+        
+class Sub(Instruction):
+    def __init__(self):
+        self.teste
+        
+class Sw(Instruction):
+    def __init__(self):
+        self.teste
+'''
 
 class Stage(object):
     def __init__(self, prev_stage):
@@ -75,6 +229,7 @@ class IF(Stage):
         if self.prev_stage.instruction_available():
             self.instruction = self.prev_stage.instruction()
             self.clock_count = self.instruction.clock_delay_for(self)
+    
         else:
             self.instruction = None
             self.clock_count = 0
@@ -98,7 +253,6 @@ class WB(Stage):
     def to_s(self):
         return "WB"
 
-
 class Pipeline:
     def __init__(self, instruction_buffer):
         self.ib  = ib  = instruction_buffer
@@ -121,6 +275,30 @@ class Pipeline:
         self.ex.foward()
         self.id.foward()
         self.if_.foward()
+
+class Register:
+    def __init__(self, value):
+        self.inUSe = False
+        self.value = value  
+        
+    def set_in_use(self):
+        self.inUse = True #Rever depois!      
+    
+class Memory:
+    def teste(self):
+        return""
+    
+registers = []
+
+for i in range(32):
+  
+    registers.append(Register(0)) #iniciar certo depois!
+
+
+'''
+teste = Add(Rx, Ry)
+teste.add()
+'''
 
 mult_instruction = Instruction('00000000110001100011100000011000')
 instruction_deque = deque([mult_instruction])
