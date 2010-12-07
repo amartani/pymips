@@ -7,14 +7,16 @@ class InstructionProxy(object):
         self.instruction_available = True
 
     def get_instruction(self):
-        return self.instructions[PC/4]
+        if PC.inUse:
+            return Nop()
+        return self.instructions[PC.value/4]
 
 class Stage(object):
     def __init__(self, prev_stage):
         self.prev_stage = prev_stage
         self.busy = False
         self.instruction_available = False
-        self.instruction = Nop(REGISTERS[0], REGISTERS[0], REGISTERS[0])
+        self.instruction = Nop()
         self.clock_count = self.instruction.clock_delay_for(self)
 
     def get_instruction(self):
@@ -35,7 +37,7 @@ class Stage(object):
             if self.prev_stage.instruction_available:
                 self.instruction = self.prev_stage.get_instruction()
             else:
-                self.instruction = Nop(REGISTERS[0], REGISTERS[0], REGISTERS[0])
+                self.instruction = Nop()
             self.clock_count = self.instruction.clock_delay_for(self)
 
 class IF(Stage):
