@@ -7,7 +7,7 @@ class InstructionBuffer(object):
         self.bits_buffer = bits_buffer
 
     def instruction_available(self):
-        if self.bits_buffer.__len__() > 0:
+        if len(self.bits_buffer) > 0:
             return True
         return False
 
@@ -18,7 +18,7 @@ class Instruction(object):
     def __init__(self, bits, pc):
         self.bits = bits
         self.pc = pc
-
+                
     def clock_delay_for(self, stage):
         if self.bits[0:5] == "000000" and self.bits[-6] == "011000" and isinstance( stage, EX ):
             return 2
@@ -278,7 +278,7 @@ class PipelineControl:
         self.main_frame = main_frame
 
     def execute(self):
-        instLength = instructions.len()
+        instLength = len(instructions)
         PC = 0
         while PC != 4*qtde_instLength :
             instruction = instructions(PC)
