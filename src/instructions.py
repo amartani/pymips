@@ -46,22 +46,27 @@ class TypeRInstruction(Instruction):
         self.rd = rd
 
     def register_fetch(self, registers):
-        self.vs = registers[self.rs]
-        self.vt = registers[self.rt]
-        registers.set_in_use(self.rd)
-        PC += 4
+        if registers.setFree (self.pc)
+            self.vs = registers[self.rs]
+            self.vt = registers[self.rt]
+            registers.set_in_use(self.rd)
+            registers.set_in_use(self.pc)
+            PC += 4
 
     def execute(self):
         pass
 
     def memory_access(self, memory):
-        if registers.set_in_use(self.rd):
+        # if registers.set_in_use(self.rd):
+        if registers.set_in_use(self.pc):
             pass
 
     def write_back(self, registers):
-        if registers.set_in_use(self.rd):
+        # if registers.set_in_use(self.rd):
+        registers.set_in_use(self.pc):        
             registers[self.rd] = self.vd
             registers.setFree(self.rd)
+            registers.setFree(self.pc)
 
 class TypeIInstruction(Instruction):
     def __init__(self, rs, rt, imm):
@@ -73,19 +78,23 @@ class TypeIInstruction(Instruction):
         self.vs = registers[self.rs]
         self.vt = registers[self.rt]
         registers.set_in_use(self.rt)
+        registers.set_in_use(self.pc)
         PC += 4
 
     def execute(self):
         pass
 
     def memory_access(self, memory):
-        if registers.set_in_use(self.rt):
+        # if registers.set_in_use(self.rt):
+        if registers.set_in_use(self.pc):
             pass
 
     def write_back(self, registers):
-        if registers.set_in_use(self.rt):
+        # if registers.set_in_use(self.rt):
+        if registers.set_in_use(self.pc):
             registers[self.rt] = self.vt
             registers.setFree(self.rt)
+            registers.setFree(self.pc)
 
 class TypeJInstruction(Instruction):
     def __init__(self, tarAdd):
@@ -152,11 +161,12 @@ class Jmp(TypeJInstruction):
         self.tarAdd = 0
 
     def execute(self):
-        if registers.set_in_use(self.rd):
-            registers.setFree(self.rd)
-        if registers.set_in_use(self.rt):
-            registers.setFree(self.rt)
+        #if registers.set_in_use(self.rd):
+         #   registers.setFree(self.rd)
+        #if registers.set_in_use(self.rt):
+         #   registers.setFree(self.rt)       
         PC = self.tarAdd
+        registers.setFree(self.pc) 
 
 # class Instruction(object):
 #     def register_fetch(self, registers):
