@@ -3,7 +3,7 @@ class InstructionBuffer(object):
         self.bits_buffer = bits_buffer
 
     def instruction_available(self):
-        if self.bits_buffer.__len__() > 0:
+        if len(self.bits_buffer) > 0:
             return True
         return False
 
@@ -151,11 +151,11 @@ class Bne(TypeIInstruction):
 
 class Lw(TypeIInstruction):
     def memory_access(self, memory):
-        self.rt = registers[memory[imm + self.vs]] 
+        registers[self.rt] = memory[imm + self.registers[self.rs]] 
 
 class Sw(TypeIInstruction):
     def memory_access(self, memory):
-        self.registers[memory[imm + self.vs]] = registers[RS] 
+        memory[registers[self.rs] + imm] = registers[self.rt] 
 
 class Jmp(TypeJInstruction):
     def __init__ (self, tarAdd):
