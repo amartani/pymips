@@ -16,7 +16,7 @@ class Instruction(object):
         return self.bits
 
     def instruction_fetch(self):
-        pass
+        PC.value += 4
 
     def register_fetch(self):
         pass
@@ -42,7 +42,7 @@ class TypeRInstruction(Instruction):
         self.vd = self.rd.value
 
     def write_back(self):
-        self.rd = self.vd
+        self.rd.value = self.vd
         self.rd.set_free()
 
 class TypeIInstruction(Instruction):
@@ -51,21 +51,13 @@ class TypeIInstruction(Instruction):
         self.rt = rt
         self.imm = imm
 
-    # CAGADO!
     def register_fetch(self):
-        if registers.setFree(self.pc): 
-            self.vs = registers[self.rs]
-            self.vt = registers[self.rt]
-            registers.set_in_use(self.rt)
-            registers.set_in_use(self.pc)
-            PC += 4
+        self.rt.set_in_use()
+        self.vs = self.rs.value
 
-    # CAGADO!
     def write_back(self):
-        if registers.set_in_use(self.pc):
-            registers[self.rt] = self.vt
-            registers.setFree(self.rt)
-            registers.setFree(self.pc)
+        self.rt.value = self.vt
+        self.rt.set_free()
 
 # class TypeJInstruction(Instruction):
 #     def __init__(self, tarAdd):
