@@ -91,10 +91,7 @@ class PipelineControl:
 
         elif line[0:6] == "000000" and line[-6:] == "000000":
             #eh nop
-            s_index = int(line[6:12], 2)
-            t_index = int(line[12:18], 2)
-            d_index = int(line[18:24], 2)
-            return Nop(REGISTERS[s_index], REGISTERS[t_index], REGISTERS[d_index])
+            return Nop()
 
         elif line[0:6] == "000000" and line[-6:] == "100010":
             #eh sub
