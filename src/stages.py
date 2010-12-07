@@ -62,7 +62,7 @@ class ID(Stage):
 
     def clock(self):
         if self.instruction.available():
-            super( FileInfo, self ).clock()
+            super( Stage, self ).clock()
 
 class EX(Stage):
     def to_s(self):

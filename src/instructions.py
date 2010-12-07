@@ -8,7 +8,7 @@ class InstructionBuffer(object):
         self.bits_buffer = bits_buffer
 
     def instruction_available(self):
-        if self.bits_buffer.__len__() > 0:
+        if len(self.bits_buffer) > 0:
             return True
         return False
 
@@ -50,6 +50,7 @@ class TypeRInstruction(Instruction):
         self.rt = rt
         self.rd = rd
 
+    # CAGADO!
     def register_fetch(self, registers):
         if registers.setFree (self.pc): 
             self.vs = registers[self.rs]
@@ -61,14 +62,14 @@ class TypeRInstruction(Instruction):
     def execute(self):
         pass
 
-    def memory_access(self, memory):
-        # if registers.set_in_use(self.rd):
+    # PUTA QUE O PARIU TA MTO CAGADO!
+    def memory_access(self):
         if REGISTERS.set_in_use(self.pc):
             pass
 
-    def write_back(self, registers):
-        # if registers.set_in_use(self.rd):
-        if registers.set_in_use(self.pc):        
+    # CAGADO!
+    def write_back(self):
+        if registers.set_in_use(self.pc):
             registers[self.rd] = self.vd
             registers.setFree(self.rd)
             registers.setFree(self.pc)
@@ -79,7 +80,7 @@ class TypeIInstruction(Instruction):
         self.rt = rt
         self.imm = imm
 
-    def register_fetch(self, registers):
+    def register_fetch(self):
         if registers.setFree (self.pc): 
             self.vs = registers[self.rs]
             self.vt = registers[self.rt]
@@ -87,16 +88,8 @@ class TypeIInstruction(Instruction):
             registers.set_in_use(self.pc)
             PC += 4
 
-    def execute(self):
-        pass
-
-    def memory_access(self, memory):
-        # if registers.set_in_use(self.rt):
-        if REGISTERS.set_in_use(self.pc):
-            pass
-
-    def write_back(self, registers):
-        # if registers.set_in_use(self.rt):
+    # CAGADO!
+    def write_back(self):
         if registers.set_in_use(self.pc):
             registers[self.rt] = self.vt
             registers.setFree(self.rt)
@@ -108,16 +101,6 @@ class TypeJInstruction(Instruction):
 
     def register_fetch(self):
         PC += 4
-        pass
-
-    def execute(self):
-        pass
-
-    def memory_access(self, memory):
-        pass
-
-    def write_back(self, registers):
-        pass
 
 class Add(TypeRInstruction):
     def execute(self):
@@ -129,7 +112,7 @@ class Sub(TypeRInstruction):
 
 class Mul(TypeRInstruction):
     def execute(self):
-        self.vd = self.vs * self.vt
+        self.vd.value = self.vs.value * self.vt.value
 
 class Nop(TypeRInstruction):
     def execute(self):
@@ -166,6 +149,7 @@ class Jmp(TypeJInstruction):
     def __init__ (self, tarAdd):
         self.tarAdd = 0
 
+    # PQP TA MTO CAGADO!
     def execute(self):
         #if registers.set_in_use(self.rd):
          #   registers.setFree(self.rd)
