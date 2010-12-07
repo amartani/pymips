@@ -45,8 +45,13 @@ class TypeRInstruction(Instruction):
         self.rt = rt
         self.rd = rd
 
+<<<<<<< local
+    def register_fetch(self, registers):
+        if registers.setFree (self.pc): 
+=======
     def register_fetch(self, registers):
         if registers.setFree(self.pc):
+>>>>>>> other
             self.vs = registers[self.rs]
             self.vt = registers[self.rt]
             registers.set_in_use(self.rd)
@@ -63,7 +68,11 @@ class TypeRInstruction(Instruction):
 
     def write_back(self, registers):
         # if registers.set_in_use(self.rd):
+<<<<<<< local
+        if registers.set_in_use(self.pc):        
+=======
         if registers.set_in_use(self.pc):
+>>>>>>> other
             registers[self.rd] = self.vd
             registers.setFree(self.rd)
             registers.setFree(self.pc)
@@ -74,12 +83,22 @@ class TypeIInstruction(Instruction):
         self.rt = rt
         self.imm = imm
 
+<<<<<<< local
+    def register_fetch(self, registers):
+        if registers.setFree (self.pc): 
+            self.vs = registers[self.rs]
+            self.vt = registers[self.rt]
+            registers.set_in_use(self.rt)
+            registers.set_in_use(self.pc)
+            PC += 4
+=======
     def register_fetch(self, registers):
         self.vs = registers[self.rs]
         self.vt = registers[self.rt]
         registers.set_in_use(self.rt)
         registers.set_in_use(self.pc)
         PC += 4
+>>>>>>> other
 
     def execute(self):
         pass
