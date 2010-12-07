@@ -7,14 +7,16 @@ class InstructionProxy(object):
         self.instruction_available = True
 
     def get_instruction(self):
-        return self.instructions[PC/4]
+        if PC.inUse:
+            return Nop()
+        return self.instructions[PC.value/4]
 
 class Stage(object):
     def __init__(self, prev_stage):
         self.prev_stage = prev_stage
         self.busy = False
         self.instruction_available = False
-        self.instruction = Nop(REGISTERS[0], REGISTERS[0], REGISTERS[0])
+        self.instruction = Nop()
         self.clock_count = self.instruction.clock_delay_for(self)
 
     def get_instruction(self):
@@ -35,7 +37,7 @@ class Stage(object):
             if self.prev_stage.instruction_available:
                 self.instruction = self.prev_stage.get_instruction()
             else:
-                self.instruction = Nop(REGISTERS[0], REGISTERS[0], REGISTERS[0])
+                self.instruction = Nop()
             self.clock_count = self.instruction.clock_delay_for(self)
 
 class IF(Stage):
@@ -50,15 +52,18 @@ class IF(Stage):
     def to_s(self):
         return "IF"
 
-    def register_fetch(self):
+    def stage_step(self):
         return self.instruction.decode_instruction
+
+    def decode_instruction(self):
+        pass
 
 class ID(Stage):
     def to_s(self):
         return "ID"
 
     def stage_step(self):
-        return self.instruction.decode_instruction
+        return self.instruction.register_fetch
 
     def clock(self):
         if self.instruction.available():
@@ -86,9 +91,9 @@ class WB(Stage):
         return self.instruction.write_back
 
 class Pipeline:
-    def __init__(self, instruction_buffer):
-        self.ib  = ib  = instruction_buffer
-        self.if_ = if_ = IF(ib)
+    def __init__(self, instruction_proxy):
+        self.ip  = ip  = instruction_proxy
+        self.if_ = if_ = IF(ip)
         self.id  = id  = ID(if_)
         self.ex  = ex  = EX(id)
         self.mem = mem = MEM(ex)

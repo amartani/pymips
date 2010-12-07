@@ -23,7 +23,7 @@ class Instruction(object):
     def register_fetch(self):
         pass
 
-    def instruction_decode():
+    def instruction_decode(self):
         pass
 
     def execute(self):
@@ -43,12 +43,7 @@ class TypeRInstruction(Instruction):
 
     # CAGADO!
     def register_fetch(self):
-        if registers.setFree (self.pc): 
-            self.vs = registers[self.rs]
-            self.vt = registers[self.rt]
-            registers.set_in_use(self.rd)
-            registers.set_in_use(self.pc)
-            PC += 4
+        self.rd.set_in_use()
 
     # PUTA QUE O PARIU TA MTO CAGADO!
     def memory_access(self):
@@ -57,10 +52,7 @@ class TypeRInstruction(Instruction):
 
     # CAGADO!
     def write_back(self):
-        if registers.set_in_use(self.pc):
-            registers[self.rd] = self.vd
-            registers.setFree(self.rd)
-            registers.setFree(self.pc)
+        self.rd.set_free()
 
 class TypeIInstruction(Instruction):
     def __init__(self, rs, rt, imm):
@@ -84,12 +76,15 @@ class TypeIInstruction(Instruction):
             registers.setFree(self.rt)
             registers.setFree(self.pc)
 
-class TypeJInstruction(Instruction):
-    def __init__(self, tarAdd):
-        self.tarAdd = tarAdd
-
-    def register_fetch(self):
-        PC += 4
+# class TypeJInstruction(Instruction):
+#     def __init__(self, tarAdd):
+#         self.tarAdd = tarAdd
+# 
+#     def decode_instruction(self):
+#         PC.set_in_use()
+# 
+#     def write_back(self):
+#         PC.set_free()
 
 class Add(TypeRInstruction):
     def execute(self):
@@ -134,15 +129,13 @@ class Sw(TypeIInstruction):
     def execute(self):
         pass
 
-class Jmp(TypeJInstruction):
-    def __init__ (self, tarAdd):
-        self.tarAdd = 0
+class Jmp(Instruction):
+    def __init__(self, tarAdd):
+        self.tarAdd = tarAdd
 
-    # PQP TA MTO CAGADO!
-    def execute(self):
-        #if registers.set_in_use(self.rd):
-         #   registers.setFree(self.rd)
-        #if registers.set_in_use(self.rt):
-         #   registers.setFree(self.rt)
-        PC = self.tarAdd
-        REGISTERS.setFree(self.pc) 
+    def decode_instruction(self):
+        PC.set_in_use()
+
+    def write_back(self):
+        PC.value = self.tarAdd
+        PC.set_free()
