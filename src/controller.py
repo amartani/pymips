@@ -9,12 +9,16 @@ class PipelineThread(threading.Thread):
     def __init__(self, pipeline):
         super(PipelineThread, self).__init__()
         self.pipeline = pipeline
+        self.started = False
         self.stopped = False
+        self.paused = False
 
     def run(self):
+        self.started = True
         pipeline_end = False
         while not self.stopped and not pipeline_end:
-            pipeline_end = not self.pipeline.clock()
+            if not self.paused:
+                pipeline_end = not self.pipeline.clock()
             time.sleep(2.0)
         
 
@@ -30,14 +34,25 @@ class Controller(object):
     
     def play(self):
         print "Button play pressed"
-        if self.thread is not None:
+        if self.thread is None:
+            return
+        if not self.thread.started:
             self.thread.start()
+        if self.thread.paused:
+            self.thread.paused = False
 
     def pause(self):
         print "Button pause pressed"
+        if self.thread is None:
+            return
+        if self.thread.paused == False:
+            self.thread.paused = True
+
     def forward(self):
         print "Button forward pressed"
+
     def file(self, f):
+        self._kill_current_thread()
         instructions = self._get_lines_from_file(f)
         pipeline = self._create_pipeline(instructions)
         self.thread = PipelineThread(pipeline)
@@ -57,6 +72,11 @@ class Controller(object):
         pipeline = Pipeline(instructions)
         pipeline.set_observer(self)
         return pipeline
+    
+    def _kill_current_thread(self):
+        if self.thread is not None:
+            self.thread.stopped = True
+            self.thread = None
 
 if __name__ == "__main__":
     
