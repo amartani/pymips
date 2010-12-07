@@ -150,12 +150,12 @@ class Bne(TypeIInstruction):
             PC += imm
 
 class Lw(TypeIInstruction):
-    def execute(self):
-        pass
+    def memory_access(self, memory):
+        self.rt = registers[memory[imm + self.vs]] 
 
 class Sw(TypeIInstruction):
-    def execute(self):
-        pass
+    def memory_access(self, memory):
+        self.registers[memory[imm + self.vs]] = registers[RS] 
 
 class Jmp(TypeJInstruction):
     def __init__ (self, tarAdd):
