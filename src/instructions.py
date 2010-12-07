@@ -3,17 +3,17 @@ from stages import *
 
 PC = 0
 
-class InstructionBuffer(object):
-    def __init__(self, bits_buffer):
-        self.bits_buffer = bits_buffer
-
-    def instruction_available(self):
-        if len(self.bits_buffer) > 0:
-            return True
-        return False
-
-    def instruction(self):
-        return self.bits_buffer.popleft()
+# class InstructionBuffer(object):
+#     def __init__(self, bits_buffer):
+#         self.bits_buffer = bits_buffer
+# 
+#     def instruction_available(self):
+#         if len(self.bits_buffer) > 0:
+#             return True
+#         return False
+# 
+#     def instruction(self):
+#         return self.bits_buffer.popleft()
 
 class Instruction(object):
     def __init__(self, bits, pc):
@@ -32,7 +32,7 @@ class Instruction(object):
     def to_s(self):
         return self.bits
 
-    def register_fetch(self, registers):
+    def register_fetch(self):
         pass
 
     def instruction_decode():
@@ -41,10 +41,10 @@ class Instruction(object):
     def execute(self):
         pass
 
-    def memory_access(self, memory):
+    def memory_access(self):
         pass
 
-    def write_back(self, registers):
+    def write_back(self):
         pass
 
 class TypeRInstruction(Instruction):
@@ -54,7 +54,7 @@ class TypeRInstruction(Instruction):
         self.rd = rd
 
     # CAGADO!
-    def register_fetch(self, registers):
+    def register_fetch(self):
         if registers.setFree (self.pc): 
             self.vs = registers[self.rs]
             self.vt = registers[self.rt]
@@ -82,7 +82,7 @@ class TypeIInstruction(Instruction):
 
     # CAGADO!
     def register_fetch(self):
-        if registers.setFree (self.pc): 
+        if registers.setFree(self.pc): 
             self.vs = registers[self.rs]
             self.vt = registers[self.rt]
             registers.set_in_use(self.rt)
