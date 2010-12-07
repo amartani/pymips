@@ -3,7 +3,7 @@
 
 '''
 
-from javax.swing import JFrame, JPanel, JLabel, JButton, JTable, JScrollPane, JTextField, BoxLayout, Box, ImageIcon, BorderFactory
+from javax.swing import JFrame, JPanel, JLabel, JButton, JTable, JScrollPane, JTextField, JFileChooser, BoxLayout, Box, ImageIcon, BorderFactory
 from javax.swing.table import DefaultTableModel
 from java.awt import BorderLayout, GridLayout, Dimension
 
@@ -21,7 +21,7 @@ class MainFrame(JFrame):
         self.title = "PyMips"
         self.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
         self._createPanes()
-        self.size = Dimension(1000, 800)
+        self.size = Dimension(1200, 750)
     
     def _createPanes(self):
         self.mainpanel = panel = JPanel()
@@ -45,6 +45,14 @@ class MainFrame(JFrame):
     @property
     def set_registers(self):
         return self.right_panel.set_registers
+    
+    @property
+    def update_stages(self):
+        return self.left_panel.update_stages
+
+    @property
+    def set_controller_observer(self):
+        return self.right_panel.set_controller_observer
         
 class LeftPanel(BorderPanel):
     def __init__(self):
@@ -59,6 +67,10 @@ class LeftPanel(BorderPanel):
         self.add(stages_image_panel)
         
         self.add(Box.createVerticalGlue())
+    
+    @property
+    def update_stages(self):
+        return self.stages_info_panel.update_stages
 
 class StagesInfoPanel(JPanel):
     def __init__(self):
@@ -68,46 +80,45 @@ class StagesInfoPanel(JPanel):
         
         self.if_panel = if_panel = StageInfoPanel("IF")
         self.add(if_panel)
-        if_panel.text = "IF"
         
         self.id_panel = id_panel = StageInfoPanel("ID")
         self.add(id_panel)
-        id_panel.text = "ID"
         
         self.ex_panel = ex_panel = StageInfoPanel("EX")
         self.add(ex_panel)
-        ex_panel.text = "EX"
         
         self.mem_panel = mem_panel = StageInfoPanel("MEM")
         self.add(mem_panel)
-        mem_panel.text = "MEM"
         
         self.wb_panel = wb_panel = StageInfoPanel("WB")
         self.add(wb_panel)
-        wb_panel.text = "WB"
+    
+    def update_stages(self, pipeline):
+        self.if_panel.update_stage(pipeline.if_)
+        self.id_panel.update_stage(pipeline.id)
+        self.ex_panel.update_stage(pipeline.ex)
+        self.mem_panel.update_stage(pipeline.mem)
+        self.wb_panel.update_stage(pipeline.wb)
 
 class StageInfoPanel(BorderPanel):
     def __init__(self, name):
         super(StageInfoPanel, self).__init__(name)
         
-        self.layout = BoxLayout(self, BoxLayout.X_AXIS)
+        self.layout = BoxLayout(self, BoxLayout.Y_AXIS)
         
-        self.add(Box.createHorizontalGlue())
+        #self.add(Box.createHorizontalGlue())
         
-        self.label = label = JLabel()
-        self.add(label)
+        self.instruction_txtfield = txtfield = JTextField(editable=False)
+        self.add(txtfield)
+        self.signals_txtfield = txtfield = JTextField(editable=False)
+        self.add(txtfield)
         
-        self.add(Box.createHorizontalGlue())
+        #self.add(Box.createHorizontalGlue())
+        
+    def update_stage(self, stage):
+        self.instruction_txtfield.text = str(stage.instruction)
+        self.signals_txtfield.text = str(stage.signals)
     
-    def set_text(self, text):
-        self.label.text = text
-    
-    def get_text(self):
-        return self.label.text
-    
-    text = property(get_text, set_text)
-        
-
 class StagesImagePanel(JPanel):
     def __init__(self):
         super(StagesImagePanel, self).__init__()
@@ -146,6 +157,10 @@ class RightPanel(JPanel):
     @property
     def set_registers(self):
         return self.registers_info_panel.set_registers
+    
+    @property
+    def set_controller_observer(self):
+        return self.control_panel.set_controller_observer
 
 class ControlPanel(BorderPanel):
     def __init__(self):
@@ -156,18 +171,52 @@ class ControlPanel(BorderPanel):
         self.add(Box.createHorizontalGlue())
         
         self.button_play = button_play = JButton(ImageIcon("../static/media-playback-start.png"))
+        button_play.actionPerformed = self.button_play_command
         self.add(button_play)
         
         self.button_ff = button_ff = JButton(ImageIcon("../static/media-seek-forward.png"))
+        button_ff.actionPerformed = self.button_forward_command
         self.add(button_ff)
         
         self.button_pause = button_pause = JButton(ImageIcon("../static/media-playback-pause.png"))
+        button_pause.actionPerformed = self.button_pause_command
         self.add(button_pause)
         
         self.button_load = button_load = JButton(ImageIcon("../static/document-open.png"))
+        button_load.actionPerformed = self.button_load_command
         self.add(button_load)
         
         self.add(Box.createHorizontalGlue())
+    
+    def set_controller_observer(self, observer):
+        self.observer = observer
+    
+    def button_play_command(self, action_event):
+        observer = self.observer
+        if observer:
+            observer.play()
+    
+    def button_pause_command(self, action_event):
+        observer = self.observer
+        if observer:
+            observer.pause()
+
+    def button_forward_command(self, action_event):
+        observer = self.observer
+        if observer:
+            observer.forward()
+
+    def button_load_command(self, action_event):
+        observer = self.observer
+        if observer is None:
+            return
+        chooser = JFileChooser()
+        val = chooser.showOpenDialog(None)
+        if val != chooser.APPROVE_OPTION:
+            return
+        filename = chooser.selectedFile.path
+        observer.file(open(filename))
+
 
 class MemInfoPanel(BorderPanel):
     def __init__(self):
@@ -251,5 +300,38 @@ if __name__ == "__main__":
     frame.update_statistics(60, 21, 41, 0.21)
     
     frame.set_registers([1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2])
+    
+    class StageMock:
+        class InstructionMock:
+            def __str__(self):
+                return "I1: ADD R10, R0, R2"
+        class SignalsMock:
+            def __str__(self):
+                return "Sinais de controle"
+        instruction = InstructionMock()
+        signals = SignalsMock()
+    
+    class PipelineMock:
+        if_ = StageMock()
+        id  = StageMock()
+        ex  = StageMock()
+        mem = StageMock()
+        wb  = StageMock()
+    
+    pipeline = PipelineMock()
+    
+    frame.update_stages(pipeline)
+    
+    class ControllerMock:
+        def play(self):
+            print "Button play pressed"
+        def pause(self):
+            print "Button pause pressed"
+        def forward(self):
+            print "Button forward pressed"
+        def file(self, f):
+            print f
+    controller = ControllerMock()
+    frame.set_controller_observer(controller)
     
     frame.show()
